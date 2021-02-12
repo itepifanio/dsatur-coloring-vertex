@@ -14,6 +14,7 @@ class Graph {
         ~Graph();
         void addEdge(int u, int v);
         void addVertex();
+        int  maximumDegree();
         void printGraph();
         static Graph randomGraph(int v);
 };

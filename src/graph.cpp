@@ -33,7 +33,7 @@ void Graph::addEdge(int u, int v){
 }
 
 void Graph::printGraph() {
-    for (int v = 0; v < this->v; v++){ 
+    for (int v = 0; v < this->v; v++){
         std::cout << std::endl;
         std::cout << "{"; 
         for (auto x : this->adj[v]){
@@ -42,6 +42,16 @@ void Graph::printGraph() {
         std::cout << "}, //" << v+1; 
         std::cout << std::endl; 
     } 
+}
+
+// return vertex with maximum degree
+int Graph::maximumDegree()
+{
+    auto aux = this->adj.begin();
+
+    for (int v = 0; v < this->v; v++){
+        
+    }
 }
 
 /**
