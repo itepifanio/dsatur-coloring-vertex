@@ -3,6 +3,8 @@
 #define GRAPHS_VERTEX_H
 
 #include <vector>
+#include <set>
+#include <algorithm>
 
 class Vertex {
     private:
@@ -24,7 +26,11 @@ class Vertex {
         void incrementSaturationDegree();
         bool isColored();
         int  getVertexColor();
-        void colorVertex(std::vector<int> &colors);
+        int  getSaturationDegree();
+        int  getCurrentColor();
+        void setCurrentColor(int color);
+        void printAdjVertexes();
+        void colorVertex(std::set<int, std::greater<int> > &colors);
 };
 
 #endif

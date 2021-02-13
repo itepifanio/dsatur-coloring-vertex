@@ -3,20 +3,24 @@
 
 #include <vector>
 
+#include "vertex.hpp"
+#include <set>
+
 class Graph {
     private:
-        std::vector<std::vector<int>> adj;
+        std::vector<Vertex*> vertexes;
+        std::set<int, std::greater<int> > colors;
         int v;
         int e;
     public:
-        Graph();
-        Graph(int v);
+        Graph(std::vector<Vertex*> &vertexes);
         ~Graph();
-        void addEdge(int u, int v);
-        void addVertex();
-        int  maximumDegree();
-        void printGraph();
-        static Graph randomGraph(int v);
+        Vertex* findMaximumDegree();
+        Vertex* findMaximumSaturationDegree();
+        bool    isFullColored();
+        bool    isValid(); // no adjacent vertices with the same color
+        int     getTotalColors();
+        void    printGraph();
 };
 
 #endif

@@ -1,7 +1,7 @@
 PROG = bin/exec
 CC = g++
 CPPFLAGS = -O0 -g -W -Wall -pedantic -std=c++17
-OBJS = main.o graph.o
+OBJS = main.o graph.o vertex.o
 
 $(PROG) : $(OBJS)
 	$(CC) $(OBJS) -o $(PROG)
@@ -10,8 +10,11 @@ $(PROG) : $(OBJS)
 main.o: include/graph.hpp
 	$(CC) $(CPPFLAGS) -c src/main.cpp
 
-graph.o: include/graph.hpp
+graph.o: include/graph.hpp include/vertex.hpp
 	$(CC) $(CPPFLAGS) -c src/graph.cpp
+
+vertex.o: include/vertex.hpp
+	$(CC) $(CPPFLAGS) -c src/vertex.cpp
 
 clean:
 	rm -f build/*.o
