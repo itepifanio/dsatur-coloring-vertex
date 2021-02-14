@@ -46,7 +46,8 @@ int main()
     Graph *g = new Graph(vertexes);
 
     g->printGraph();
-
+    g->dsatur();
+    g->printGraph();
     
     return 0;
 }

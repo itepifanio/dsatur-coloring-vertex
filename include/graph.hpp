@@ -12,6 +12,7 @@ class Graph {
         std::set<int, std::greater<int> > colors;
         int v;
         int e;
+        int coloredVertexes = 0;
     public:
         Graph(std::vector<Vertex*> &vertexes);
         ~Graph();
@@ -21,6 +22,10 @@ class Graph {
         bool    isValid(); // no adjacent vertices with the same color
         int     getTotalColors();
         void    printGraph();
+        void    dsatur();
+        void    incrementColoredVertexes();
+        bool    isColored();
+        int     getColoredVertex();
 };
 
 #endif

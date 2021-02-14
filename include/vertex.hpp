@@ -30,7 +30,9 @@ class Vertex {
         int  getCurrentColor();
         void setCurrentColor(int color);
         void printAdjVertexes();
-        void colorVertex(std::set<int, std::greater<int> > &colors);
+        void setColored(bool b);
+        void updateCurrentSaturationDegree();
+        void colorVertex(std::set<int, std::greater<int>> &colors);
 };
 
 #endif

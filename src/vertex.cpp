@@ -12,8 +12,10 @@ Vertex::~Vertex() {}
 void Vertex::addAdjacentVertex(Vertex *vertex)
 {
     // check vertex exist
-    for (auto it = this->adj.begin(); it != this->adj.end(); ++it) {
-        if ( (*it)->id == vertex->id ) {
+    for (auto it = this->adj.begin(); it != this->adj.end(); ++it)
+    {
+        if ((*it)->id == vertex->id)
+        {
             return;
         }
     }
@@ -24,8 +26,10 @@ void Vertex::addAdjacentVertex(Vertex *vertex)
 
 bool Vertex::isAdjacent(Vertex &vertex)
 {
-    for (auto v = this->adj.begin(); v != this->adj.end(); ++v) {
-        if ((*v)->getId() == vertex.getId()) {
+    for (auto v = this->adj.begin(); v != this->adj.end(); ++v)
+    {
+        if ((*v)->getId() == vertex.getId())
+        {
             return true;
         }
     }
@@ -35,9 +39,12 @@ bool Vertex::isAdjacent(Vertex &vertex)
 
 bool Vertex::hasNeighborhoodsWithSameColor(int color, Vertex &neighborhood)
 {
-    for (auto it = this->adj.begin(); it != this->adj.end(); ++it) {
-        if ((*it)->isColored() && (*it)->getId() != neighborhood.getId()) {
-            if ((*it)->getVertexColor() == color) {
+    for (auto it = this->adj.begin(); it != this->adj.end(); ++it)
+    {
+        if ((*it)->isColored() && (*it)->getId() != neighborhood.getId())
+        {
+            if ((*it)->getVertexColor() == color)
+            {
                 return true;
             }
         }
@@ -57,29 +64,30 @@ void Vertex::updateNeighborhoodsSaturationDegree()
     }
 }
 
-// check neighborhoods colors and the overall colors, if it has colors that is not used by 
+// check neighborhoods colors and the overall colors, if it has colors that is not used by
 // the vertex neighborhoods then one is applied to the current vertex. If all colors was alreasy
 // aplied then it creates a new one and apply it to the current vertex.
-void Vertex::colorVertex(std::set<int, std::greater<int> > &colors) 
+void Vertex::colorVertex(std::set<int, std::greater<int>> &colors)
 {
     std::set<int, std::greater<int>> neighborhoodsColors;
     std::set<int, std::greater<int>> colorsStillCanBeUsed;
     for (auto it = this->adj.begin(); it != this->adj.end(); ++it)
-        if ((*it)->isColored()) neighborhoodsColors.insert( (*it)->getVertexColor() );
-    
+        if ((*it)->isColored())
+            neighborhoodsColors.insert((*it)->getVertexColor());
+
     std::set_difference(
         colors.begin(), colors.end(),
         neighborhoodsColors.begin(), neighborhoodsColors.end(),
-        std::inserter(colorsStillCanBeUsed, colorsStillCanBeUsed.end())
-    );
+        std::inserter(colorsStillCanBeUsed, colorsStillCanBeUsed.end()));
 
-    if (colorsStillCanBeUsed.size() > 0) {
+    if (colorsStillCanBeUsed.size() > 0)
+    {
         this->setCurrentColor(*colorsStillCanBeUsed.begin());
-        
+
         return;
     }
 
-    colors.insert(*colors.end() + 1 );
+    colors.insert(*colors.end() + 1);
     this->setCurrentColor(*colors.end());
 }
 
@@ -117,7 +125,7 @@ int Vertex::getId()
     return this->id;
 }
 
-int  Vertex::getCurrentColor()
+int Vertex::getCurrentColor()
 {
     return this->currentColor;
 }
@@ -127,11 +135,22 @@ void Vertex::setCurrentColor(int color)
     this->currentColor = color;
 }
 
-
-void Vertex::printAdjVertexes() {
-    std::cout << "{"; 
-        for (auto it = this->adj.begin(); it != this->adj.end(); ++it){
-            std::cout << (*it)->getId() << ", "; 
-        } 
+void Vertex::printAdjVertexes()
+{
+    std::cout << "{";
+    for (auto it = this->adj.begin(); it != this->adj.end(); ++it)
+    {
+        std::cout << (*it)->getId() << ", ";
+    }
     std::cout << "}, //";
+}
+
+void Vertex::setColored(bool b)
+{
+    this->colored = b;
+}
+
+void Vertex::updateCurrentSaturationDegree()
+{
+    this->saturationDegree = this->adj.size();
 }
