@@ -5,7 +5,7 @@
 Graph::Graph(std::vector<Vertex *> &vertexes)
 {
     this->vertexes = vertexes;
-    this->colors.insert(1);
+    // this->colors.insert(1);
 }
 
 Vertex *Graph::findMaximumDegree()
@@ -68,7 +68,14 @@ int Graph::getColoredVertex()
 
 bool Graph::isColored()
 {
-    return this->getColoredVertex() == (int) (this->vertexes.size()-1);
+    bool colored = true;
+    
+    for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) {
+        std::cout << "current vertex color" << (*it)->getCurrentColor() << std::endl;
+        if ( !(*it)->isColored() ) return false;
+    }
+    
+    return colored;
 }
 
 void Graph::printGraph()
@@ -91,8 +98,8 @@ void Graph::dsatur()
 
     // the first iteration ignores the saturation degree
     auto maxVertexDegree = this->findMaximumDegree();
-    maxVertexDegree->setCurrentColor(1);
     maxVertexDegree->setColored(true);
+    maxVertexDegree->colorVertex(this->colors);
     maxVertexDegree->updateNeighborhoodsSaturationDegree();
     maxVertexDegree->updateCurrentSaturationDegree();
 
@@ -100,7 +107,27 @@ void Graph::dsatur()
         auto maxSaturationDegree = this->findMaximumSaturationDegree();
         maxSaturationDegree->colorVertex(this->colors);
         maxSaturationDegree->setColored(true);
-        this->incrementColoredVertexes();
+        std::cout << "is colored " << (bool)maxSaturationDegree->isColored() << std::endl;
+        // this->incrementColoredVertexes();
         maxSaturationDegree->updateNeighborhoodsSaturationDegree();
     }
+}
+
+bool Graph::hasDsaturWorked()
+{
+    for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it)
+    {
+        int currentColor = (*it)->getCurrentColor();
+        
+        for (auto adj = (*it)->adj.begin(); adj != (*it)->adj.end(); ++adj)
+        {
+            if (currentColor == (*adj)->getCurrentColor()) return false;
+        }
+    }
+
+    return true;
+}
+
+int Graph::getTotalColors() {
+    return this->colors.size();
 }

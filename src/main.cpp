@@ -2,52 +2,68 @@
 #include "../include/graph.hpp"
 
 #include <iostream>
+#include <chrono>
+
+std::vector<Vertex*> test(int n)
+{
+    std::vector<Vertex*> vertexes;
+    int edges = 0;
+
+	for (int i=0; i < n; ++i) {
+        Vertex *v = new Vertex(i+1);
+
+		int start = rand()%n+1;
+		int end = rand()%n+1;
+
+		if (start > end) {
+			int temp = start;
+			start = end;
+			end = temp;
+		}
+
+		for (int j = start; j<=end; ++j) {
+            if(i+1 != j) {
+                edges++;
+			    v->addAdjacentVertex(new Vertex(rand()));
+            }
+		}
+
+        vertexes.push_back(v);
+    }
+
+    std::cout << "Number of edges on the graph" << std::endl;
+    std::cout << edges << std::endl;
+    
+    return vertexes;
+}
 
 int main()
 {
-    // TODO::BUILD THE VERTEXES THEN PASS TO THE GRAPH
-
-
-    // add every step to run dsatur.
-
-
-    std::vector<Vertex*> vertexes;
-
-    Vertex *v1 = new Vertex(1);
-    Vertex *v2 = new Vertex(2);
-    Vertex *v3 = new Vertex(3);
-    Vertex *v4 = new Vertex(4);
-    Vertex *v5 = new Vertex(5);
-    Vertex *v6 = new Vertex(6);
-    Vertex *v7 = new Vertex(7);
-    Vertex *v8 = new Vertex(8);
     
-    v1->addAdjacentVertex(v2);
-    v1->addAdjacentVertex(v3);
-    v1->addAdjacentVertex(v4);
-    v2->addAdjacentVertex(v6);
-    v2->addAdjacentVertex(v5);
-    v3->addAdjacentVertex(v7);
-    v4->addAdjacentVertex(v7);
-    v5->addAdjacentVertex(v6);
-    v5->addAdjacentVertex(v8);
-    v6->addAdjacentVertex(v8);
-    v7->addAdjacentVertex(v8);
-    
-    vertexes.push_back(v1);
-    vertexes.push_back(v2);
-    vertexes.push_back(v3);
-    vertexes.push_back(v4);
-    vertexes.push_back(v5);
-    vertexes.push_back(v6);
-    vertexes.push_back(v7);
-    vertexes.push_back(v8);
+    // for(int i = 0; i < 1000; i += 100) {
+        int i = 8;
+        std::vector<Vertex*> a = test(i);
 
-    Graph *g = new Graph(vertexes);
+        Graph *g = new Graph(a);
 
-    g->printGraph();
-    g->dsatur();
-    g->printGraph();
+        auto start = std::chrono::high_resolution_clock::now(); 
+        g->dsatur();
+        auto stop = std::chrono::high_resolution_clock::now();
+
+        if(g->hasDsaturWorked()) {
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+            
+            std::cout <<
+                "Graph with " << i << " vertexes "
+                << "calculates " << g->getTotalColors() << " color and it"
+                << " was executed in "
+                << duration.count() << " microseconds."
+            << std::endl;
+        } else {
+            std::cout << "Coloring doesnt worked. Debug the graph:" << std::endl;
+            g->printGraph();
+        }
+    // }
     
     return 0;
 }

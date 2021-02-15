@@ -10,10 +10,10 @@ class Vertex {
     private:
         int  id;
         int  saturationDegree = 0;
-        int  currentColor = -1;
         bool colored = false;
-        std::vector<Vertex*> adj;
     public:
+        int  currentColor = -1;
+        std::vector<Vertex*> adj;
         Vertex(int id);
         ~Vertex();
         void addAdjacentVertex(Vertex *vertex);
