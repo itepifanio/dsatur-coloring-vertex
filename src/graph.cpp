@@ -71,7 +71,6 @@ bool Graph::isColored()
     bool colored = true;
     
     for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) {
-        std::cout << "current vertex color" << (*it)->getCurrentColor() << std::endl;
         if ( !(*it)->isColored() ) return false;
     }
     
@@ -82,10 +81,7 @@ void Graph::printGraph()
 {
     for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it)
     {
-        std::cout << std::endl;
         (*it)->printAdjVertexes();
-        std::cout << (*it)->getId() << " Color " << (*it)->getCurrentColor();
-        std::cout << std::endl;
     }
 }
 
@@ -107,7 +103,6 @@ void Graph::dsatur()
         auto maxSaturationDegree = this->findMaximumSaturationDegree();
         maxSaturationDegree->colorVertex(this->colors);
         maxSaturationDegree->setColored(true);
-        std::cout << "is colored " << (bool)maxSaturationDegree->isColored() << std::endl;
         // this->incrementColoredVertexes();
         maxSaturationDegree->updateNeighborhoodsSaturationDegree();
     }

@@ -69,23 +69,16 @@ void Vertex::updateNeighborhoodsSaturationDegree()
 // aplied then it creates a new one and apply it to the current vertex.
 void Vertex::colorVertex(std::set<int, std::greater<int>> &colors)
 {
-    std::cout << "start to color" << std::endl;
     std::set<int, std::greater<int>> neighborhoodsColors;
     std::set<int, std::greater<int>> colorsStillCanBeUsed;
 
     for (auto it = this->adj.begin(); it != this->adj.end(); ++it)
     {
-        std::cout << "iterating over adj" << std::endl;
         if ((*it)->isColored())
         {
-            std::cout << "AAAAAAAAAAAAAAAAAAA" << std::endl;
             neighborhoodsColors.insert((*it)->getVertexColor());
         }
     }
-
-    std::cout << std::endl;
-
-    std::cout << "neighborhoods " << neighborhoodsColors.size() << std::endl;
     
     std::set_difference(
         colors.begin(),
@@ -98,10 +91,6 @@ void Vertex::colorVertex(std::set<int, std::greater<int>> &colors)
         )
     );
 
-
-    std::cout << "Colors that still can be used: " << std::endl;
-    std::cout << colorsStillCanBeUsed.size() << std::endl;
-
     if (colorsStillCanBeUsed.size() > 0)
     {
         this->setCurrentColor(*colorsStillCanBeUsed.begin());
@@ -109,7 +98,6 @@ void Vertex::colorVertex(std::set<int, std::greater<int>> &colors)
         return;
     }
 
-    std::cout << " color " << *colors.end() + 1 << " inserted " << std::endl;
     colors.insert(*colors.end() + 1);
     this->setCurrentColor(*colors.end());
 }
