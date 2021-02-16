@@ -1,10 +1,12 @@
 #include "../include/vertex.hpp"
 #include "../include/graph.hpp"
+#include "../lib/fort.hpp"
+
 
 #include <iostream>
 #include <chrono>
 
-std::vector<Vertex *> test(int n)
+std::vector<Vertex *> test(int n, fort::char_table &table)
 {
     std::vector<Vertex *> vertexes;
     int edges = 0;
@@ -31,21 +33,22 @@ std::vector<Vertex *> test(int n)
         }
     }
 
-    std::cout << "     " << edges;
+    table << edges;
 
     return vertexes;
 }
 
 int main()
 {
-
-    std::cout << "| Graph | Edges | Colors | Milisseconds |" << std::endl;
+    fort::char_table table;
+    table << fort::header
+         << "Graph" << "Edges" << "Colors" << "Milisseconds" << fort::endr;
     
-    for (int i = 0; i < 3600; i += 100)
+    for (int i = 0; i <= 3600; i += 100)
     {
-        std::cout << "  " << i;
+        table << i;
 
-        std::vector<Vertex *> a = test(i);
+        std::vector<Vertex *> a = test(i, table);
         
         Graph *g = new Graph(a);
 
@@ -57,9 +60,9 @@ int main()
         {
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
-            std::cout << "       " << g->getTotalColors();
-            std::cout << "       " << duration.count() <<
-            std::endl;
+            table << g->getTotalColors();
+            table << duration.count() <<
+            fort::endr;
         }
         else
         {
@@ -67,6 +70,9 @@ int main()
             g->printGraph();
         }
     }
+
+    std::cout << table.to_string() << std::endl;
+
 
     return 0;
 }

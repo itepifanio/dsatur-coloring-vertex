@@ -11,15 +11,14 @@ class Vertex {
         int  id;
         int  saturationDegree = 0;
         bool colored = false;
-    public:
         int  currentColor = -1;
+    public:
         std::vector<Vertex*> adj;
         Vertex(int id);
         ~Vertex();
         void addAdjacentVertex(Vertex *vertex);
         int  getDegree();
         int  getId();
-        // void removeAdjacentVertex(Vertex *vertex);
         bool isAdjacent(Vertex &vertex);
         bool hasNeighborhoodsWithSameColor(int color, Vertex &vertex);
         void updateNeighborhoodsSaturationDegree();
