@@ -3,19 +3,29 @@
 
 #include <vector>
 
+#include "vertex.hpp"
+#include <set>
+
 class Graph {
     private:
-        std::vector<std::vector<int>> adj;
+        std::vector<Vertex*> vertexes;
+        std::set<int, std::greater<int>> colors;
         int v;
         int e;
+        int coloredVertexes = 0;
     public:
-        Graph();
-        Graph(int v);
+        Graph(std::vector<Vertex*> &vertexes);
         ~Graph();
-        void addEdge(int u, int v);
-        void addVertex();
-        void printGraph();
-        static Graph randomGraph(int v);
+        Vertex* findMaximumDegree();
+        Vertex* findMaximumSaturationDegree();
+        bool    isFullColored();
+        int     getTotalColors();
+        void    printGraph();
+        void    dsatur();
+        void    incrementColoredVertexes();
+        bool    isColored();
+        int     getColoredVertex();
+        bool    hasDsaturWorked();
 };
 
 #endif

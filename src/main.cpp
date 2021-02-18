@@ -1,39 +1,78 @@
+#include "../include/vertex.hpp"
 #include "../include/graph.hpp"
+#include "../lib/fort.hpp"
+
+
+#include <iostream>
+#include <chrono>
+
+std::vector<Vertex *> test(int n, fort::char_table &table)
+{
+    std::vector<Vertex *> vertexes;
+    int edges = 0;
+
+    for (int i = 0; i < n; ++i)
+    {
+        Vertex *v = new Vertex(i + 1);
+
+        vertexes.push_back(v);
+    }
+
+    for (int j = 0; j < rand() % (n - 1); j++)
+    {
+        for (int i = 0; i < n; ++i)
+        {
+            int adjacent = i;
+            while (adjacent == i)
+            {
+                adjacent = rand() % (n - 1);
+            }
+
+            edges++;
+            vertexes[i]->addAdjacentVertex(vertexes[adjacent]);
+        }
+    }
+
+    table << edges;
+
+    return vertexes;
+}
 
 int main()
 {
-    Graph g;
+    fort::char_table table;
+    table << fort::header
+         << "Graph" << "Edges" << "Colors" << "Milisseconds" << fort::endr;
     
-    for(int i = 0; i < 8; i++){
-        g.addVertex();
+    for (int i = 0; i <= 3600; i += 100)
+    {
+        table << i;
+
+        std::vector<Vertex *> a = test(i, table);
+        
+        Graph *g = new Graph(a);
+
+        auto start = std::chrono::high_resolution_clock::now();
+        g->dsatur();
+        auto stop = std::chrono::high_resolution_clock::now();
+
+        if (g->hasDsaturWorked())
+        {
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
+            table << g->getTotalColors();
+            table << duration.count() <<
+            fort::endr;
+        }
+        else
+        {
+            std::cout << "Coloring doesnt worked. Debug the graph:" << std::endl;
+            g->printGraph();
+        }
     }
 
-    g.addEdge(0, 1);
-    g.addEdge(0,2);
-    g.addEdge(0,3);
-    g.addEdge(0,6);
-    g.addEdge(1,0);
-    g.addEdge(1,4);
-    g.addEdge(1,5);
-    g.addEdge(2,0);
-    g.addEdge(2,6);
-    g.addEdge(3,0);
-    g.addEdge(3,6);
-    g.addEdge(4,1);
-    g.addEdge(4,5);
-    g.addEdge(4,7);
-    g.addEdge(5,1);
-    g.addEdge(5,7);
-    g.addEdge(5,4);
-    g.addEdge(6,0);
-    g.addEdge(6,2);
-    g.addEdge(6,3);
-    g.addEdge(6,7);
-    g.addEdge(7,6);
-    g.addEdge(7,5);
-    g.addEdge(7,4);
+    std::cout << table.to_string() << std::endl;
 
-    g.printGraph();
 
     return 0;
 }

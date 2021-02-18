@@ -1,74 +1,128 @@
 #include "../include/graph.hpp"
+
 #include <iostream>
-#include <vector>
-#include <stdlib.h>
-#include <cstdlib>
-#include <string>
 
-Graph::Graph(){
-    this->v = 0;
-    this->e = 0;
+Graph::Graph(std::vector<Vertex *> &vertexes)
+{
+    this->vertexes = vertexes;
+    // this->colors.insert(1);
 }
 
-Graph::Graph(int v){
-    this->v = 0;
-    this->e = 0;
-    
-    for(int i = 0; i < v; i++){
-        this->addVertex();
+Vertex *Graph::findMaximumDegree()
+{
+    auto aux = this->vertexes.begin();
+
+    // Iterates over the vector of vertices comparing the degrees
+    for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it)
+    {
+        if ((*it)->getDegree() > (*aux)->getDegree())
+        {
+            aux = it;
+        }
     }
+
+    return *aux;
 }
 
-Graph::~Graph(){}
+Vertex *Graph::findMaximumSaturationDegree()
+{
+    int maxSaturation = 0;
 
-void Graph::addVertex(){
-    std::vector<int> v;
-    this->adj.push_back(v);
-    this->v++;
-}
+    Vertex *maxSaturated = nullptr;
 
-void Graph::addEdge(int u, int v){
-    this->adj[u].push_back(v);
-    this->e++;
-}
+    for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it)
+    {
+        if (((*it)->getSaturationDegree() > maxSaturation) && (!(*it)->isColored()))
+        {
+            maxSaturation = (*it)->getSaturationDegree();
+            maxSaturated = *it;
+        }
+    }
 
-void Graph::printGraph() {
-    for (int v = 0; v < this->v; v++){ 
-        std::cout << std::endl;
-        std::cout << "{"; 
-        for (auto x : this->adj[v]){
-            std::cout << x << ", "; 
-        } 
-        std::cout << "}, //" << v+1; 
-        std::cout << std::endl; 
-    } 
-}
+    int degree = 0;
 
-/**
- * Recebe número de arestas e vertices e retorna um grafo aleatório
- * e <= v*(v-1)
- */ 
-Graph Graph::randomGraph(int v){
-    Graph graph;
-
-	for (int i=0; i<v; ++i) {
-        graph.addVertex();
-
-		int start = rand()%v+1;
-		int end = rand()%v+1;
-
-		if (start > end) {
-			int temp = start;
-			start = end;
-			end = temp;
-		}
-
-		for (int j=start; j<=end; ++j) {
-            if(i+1 != j) {
-			    graph.addEdge(i,j);
+    for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it)
+    {
+        if (((*it)->getSaturationDegree() == maxSaturation) && (!(*it)->isColored()))
+        {
+            if ((*it)->getDegree() >= degree)
+            {
+                degree = (*it)->getDegree();
+                maxSaturated = *it;
             }
-		}
+        }
     }
 
-    return graph;
+    return maxSaturated;
+}
+
+void Graph::incrementColoredVertexes()
+{
+    this->coloredVertexes += 1;
+}
+
+int Graph::getColoredVertex()
+{
+    return this->coloredVertexes;
+}
+
+bool Graph::isColored()
+{
+    bool colored = true;
+    
+    for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) {
+        if ( !(*it)->isColored() ) return false;
+    }
+    
+    return colored;
+}
+
+void Graph::printGraph()
+{
+    for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it)
+    {
+        (*it)->printAdjVertexes();
+    }
+}
+
+void Graph::dsatur()
+{
+    if (this->vertexes.size() == 0)
+    {
+        return;
+    }
+
+    // the first iteration ignores the saturation degree
+    auto maxVertexDegree = this->findMaximumDegree();
+    maxVertexDegree->setColored(true);
+    maxVertexDegree->colorVertex(this->colors);
+    maxVertexDegree->updateNeighborhoodsSaturationDegree();
+    maxVertexDegree->updateCurrentSaturationDegree();
+
+    while(! this->isColored()) {
+        auto maxSaturationDegree = this->findMaximumSaturationDegree();
+        maxSaturationDegree->colorVertex(this->colors);
+        maxSaturationDegree->setColored(true);
+        // this->incrementColoredVertexes();
+        maxSaturationDegree->updateNeighborhoodsSaturationDegree();
+    }
+}
+
+bool Graph::hasDsaturWorked()
+{
+    for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it)
+    {
+        int currentColor = (*it)->getCurrentColor();
+        
+        for (auto adj = (*it)->adj.begin(); adj != (*it)->adj.end(); ++adj)
+        {
+            if (currentColor == (*adj)->getCurrentColor()) return false;
+        }
+    }
+
+    return true;
+}
+
+int Graph::getTotalColors() {
+    return this->colors.size();
 }
