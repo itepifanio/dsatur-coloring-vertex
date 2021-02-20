@@ -44,7 +44,7 @@ int main()
     table << fort::header
          << "Graph" << "Edges" << "Colors" << "Milisseconds" << fort::endr;
     
-    for (int i = 0; i <= 3600; i += 100)
+    for (int i = 0; i <= 1000; i += 100)
     {
         table << i;
 

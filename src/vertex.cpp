@@ -146,7 +146,7 @@ void Vertex::setCurrentColor(int color)
     this->currentColor = color;
 }
 
-void Vertex::printAdjVertexes()
+void Vertex::printAdjVertexes() 
 {
     std::cout << "{";
     for (auto it = this->adj.begin(); it != this->adj.end(); ++it)

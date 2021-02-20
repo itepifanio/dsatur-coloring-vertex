@@ -97,7 +97,7 @@ void Graph::dsatur()
     maxVertexDegree->setColored(true);
     maxVertexDegree->colorVertex(this->colors);
     maxVertexDegree->updateNeighborhoodsSaturationDegree();
-    maxVertexDegree->updateCurrentSaturationDegree();
+    // maxVertexDegree->updateCurrentSaturationDegree();
 
     while(! this->isColored()) {
         auto maxSaturationDegree = this->findMaximumSaturationDegree();
