@@ -18,14 +18,16 @@ std::vector<Vertex *> test(int n, fort::char_table &table)
         vertexes.push_back(v);
     }
 
-    for (int j = 0; j < rand() % (n - 1); j++)
+    std::srand( ( unsigned int )std::time( nullptr ) );
+
+    for (int j = 0; j < std::rand() % 10000; ++j)
     {
         for (int i = 0; i < n; ++i)
         {
             int adjacent = i;
             while (adjacent == i)
             {
-                adjacent = rand() % (n - 1);
+                adjacent = std::rand() % (n - 1);
             }
 
             edges++;
@@ -42,9 +44,9 @@ int main()
 {
     fort::char_table table;
     table << fort::header
-         << "Graph" << "Edges" << "Colors" << "Milisseconds" << fort::endr;
+         << "Vertexes" << "Edges" << "Colors" << "Milisseconds" << fort::endr;
     
-    for (int i = 0; i <= 3600; i += 100)
+    for (int i = 0; i <= 1000; i += 100)
     {
         table << i;
 
@@ -62,6 +64,7 @@ int main()
 
             table << g->getTotalColors();
             table << duration.count() <<
+            
             fort::endr;
         }
         else

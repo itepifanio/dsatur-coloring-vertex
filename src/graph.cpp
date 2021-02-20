@@ -5,14 +5,12 @@
 Graph::Graph(std::vector<Vertex *> &vertexes)
 {
     this->vertexes = vertexes;
-    // this->colors.insert(1);
 }
 
 Vertex *Graph::findMaximumDegree()
 {
     auto aux = this->vertexes.begin();
 
-    // Iterates over the vector of vertices comparing the degrees
     for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it)
     {
         if ((*it)->getDegree() > (*aux)->getDegree())
@@ -24,33 +22,40 @@ Vertex *Graph::findMaximumDegree()
     return *aux;
 }
 
+// it also check tied max saturation degree
 Vertex *Graph::findMaximumSaturationDegree()
 {
     int maxSaturation = 0;
+    std::vector<Vertex *> tied;
 
     Vertex *maxSaturated = nullptr;
 
     for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it)
     {
+        // check tied degrees
+        if((*it)->getSaturationDegree() == maxSaturation) {
+            tied.push_back(*it);
+        }
+
         if (((*it)->getSaturationDegree() > maxSaturation) && (!(*it)->isColored()))
         {
             maxSaturation = (*it)->getSaturationDegree();
             maxSaturated = *it;
+            tied.clear();
         }
     }
 
-    int degree = 0;
+    int maxDegree = 0;
 
-    for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it)
+    // iterates over tied vertexes and selects one of them
+    for (auto it = tied.begin(); it != tied.end(); ++it)
     {
-        if (((*it)->getSaturationDegree() == maxSaturation) && (!(*it)->isColored()))
-        {
-            if ((*it)->getDegree() >= degree)
+            if ( (!(*it)->isColored()) && (*it)->getDegree() >= maxDegree)
             {
-                degree = (*it)->getDegree();
+                maxDegree    = (*it)->getDegree();
                 maxSaturated = *it;
             }
-        }
+        
     }
 
     return maxSaturated;
@@ -68,13 +73,7 @@ int Graph::getColoredVertex()
 
 bool Graph::isColored()
 {
-    bool colored = true;
-    
-    for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) {
-        if ( !(*it)->isColored() ) return false;
-    }
-    
-    return colored;
+    return this->getColoredVertex() == (int) (this->vertexes.size()-1);
 }
 
 void Graph::printGraph()
@@ -103,7 +102,7 @@ void Graph::dsatur()
         auto maxSaturationDegree = this->findMaximumSaturationDegree();
         maxSaturationDegree->colorVertex(this->colors);
         maxSaturationDegree->setColored(true);
-        // this->incrementColoredVertexes();
+        this->incrementColoredVertexes();
         maxSaturationDegree->updateNeighborhoodsSaturationDegree();
     }
 }
