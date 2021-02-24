@@ -1,7 +1,7 @@
 PROG = bin/exec
 CC = g++
 CPPFLAGS = -O0 -g -W -Wall -pedantic -std=c++17
-OBJS = main.o graph.o vertex.o fort.o
+OBJS = main.o graph.o vertex.o fort.o reader.o
 
 $(PROG) : $(OBJS)
 	$(CC) $(OBJS) -o $(PROG)
@@ -15,6 +15,9 @@ graph.o: include/graph.hpp include/vertex.hpp
 
 fort.o: lib/fort.hpp
 	$(CC) $(CPPFLAGS) -c lib/fort.cpp
+
+reader.o: include/reader.hpp include/vertex.hpp
+	$(CC) $(CPPFLAGS) -c src/reader.cpp
 
 vertex.o: include/vertex.hpp
 	$(CC) $(CPPFLAGS) -c src/vertex.cpp
