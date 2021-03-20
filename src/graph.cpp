@@ -129,35 +129,144 @@ int Graph::getTotalColors()
     return this->colors.size();
 }
 
+void Graph::setColoredVertex(int c)
+{
+    this->coloredVertexes = c;
+}
+
 void Graph::vertexOrderAscByDegree()
 {
-
     std::sort(
         this->vertexes.begin(), 
         this->vertexes.end(), 
-        [](Vertex &v1, Vertex &v2) { // anonymous function c++
-            return (v1.getDegree() < v2.getDegree());
+        [](const Vertex *v1, const Vertex *v2) { // anonymous function c++
+            return (v1->adj.size() > v2->adj.size());
         }
     );
+}
+
+void Graph::calculateU(Vertex *v, std::set<int> *U, int q)
+{
+    std::set<int> aux, result;
+    U->clear(); // should clear?
+
+    for (int i = 1; i <= q+1; i++) // colors 1 to q+1
+    {
+        U->insert(i);
+    }
+    
+    for (auto it = v->adj.begin(); it != v->adj.end(); it++) // neighborhood colors
+    {
+        aux.insert((*it)->getCurrentColor());
+    }
+
+    // calculate the diff between the U and the neighborhood colors
+    std::set_difference(
+        U->begin(),
+        U->end(),
+        aux.begin(),
+        aux.end(),
+        std::inserter(
+            result,
+            result.end()
+        )
+    );
+
+    U = &result;
+}
+
+// there's some bug here
+int Graph::smallestIndexJSuchThatVjColorIsEqualTo(int k)
+{
+    int j = (int) this->vertexes.size();
+
+    for(auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) {
+        if((*it)->getCurrentColor() == k) {
+            std::cout << " J = " << j << std::endl;
+
+            return j;
+        }
+
+        j++;
+    }
+
+    std::cout << "nooo" << std::endl;
 }
 
 void Graph::brown()
 {
     int n = this->vertexes.size();
     this->vertexOrderAscByDegree();
+
     this->vertexes[0]->setCurrentColor((*this->colors.begin()));
     int i = 2;
     int k = n;
     int q = 1;
     std::set<int> U;
-    int l1 = 1;
+    int li = 1;
     bool updateU = true;
-
+    
     while (i > 1) {
+
+        std::cout << "Print vertexes and its colors" << std::endl;
+        for (auto i = vertexes.begin(); i != vertexes.end(); i++)
+        {
+            std::cout << "Vertex " << (*i)->getId() << " with color " << (*i)->getCurrentColor() << std::endl;
+        }
+
         if (updateU) {
-            // calculate the set U such that Ui has the colors
-            // in {1, 2, ..., q+1} minuts the ones that are not 
-            // used by the neighbors of Vi
+
+            std::cout << "compute U before calculate" << std::endl;
+            for (auto i = U.begin(); i != U.end(); i++)
+            {
+                std::cout << *i << std::endl;
+            }
+            
+
+            this->calculateU(this->vertexes[i-1],&U, q); // O(n)
+
+            std::cout << "compute U before calculate" << std::endl;
+            for (auto i = U.begin(); i != U.end(); i++)
+            {
+                std::cout << *i << std::endl;
+            }     
+        }
+
+        if(U.empty()) {
+            i = i - 1;
+            q = li;
+            updateU = false;
+        } else {
+            int j = *U.begin();
+                        
+            this->vertexes[i-1]->setCurrentColor(j);
+            this->colors.insert(j);
+
+            U.erase(j); // does this remove j from the set?
+
+            if (j < k) {
+                if(j > q) {
+                    q = q + 1;
+                }
+
+                if(i == n) {
+                    std::cout << "Storing solution: " << this->colors.size() << std::endl;
+                    this->setColoredVertex(this->colors.size()); // store the current solution?
+                    k = q;
+                    this->smallestIndexJSuchThatVjColorIsEqualTo(k); // very weird this function, not sure if its ok
+                    i = j - 1;
+                    q = k - 1;
+                    updateU = false;
+                } else {
+                    li = q;
+                    i = i + 1;
+                    updateU = true;
+                }
+            } else {
+                i = i - 1;
+                q = li;
+                updateU = false;
+            }
         }
     }
 }

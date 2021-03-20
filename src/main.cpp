@@ -9,6 +9,8 @@
 
 int main()
 {
+    std::vector<Vertex*> graph; 
+
     Vertex *a = new Vertex(1);
     Vertex *b = new Vertex(2);
     Vertex *c = new Vertex(3);
@@ -28,8 +30,6 @@ int main()
     c->addAdjacentVertex(e);
     c->addAdjacentVertex(b);
     e->addAdjacentVertex(b);
-
-    std::vector<Vertex*> graph; 
     
     graph.push_back(a);
     graph.push_back(b);
@@ -43,6 +43,7 @@ int main()
     Graph *graphs = new Graph(graph);
 
     graphs->brown();
+    graphs->printGraph();
 
     return 0;
 }

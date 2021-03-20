@@ -25,9 +25,12 @@ class Graph {
         void    incrementColoredVertexes();
         bool    isColored();
         int     getColoredVertex();
+        void    setColoredVertex(int c);
         bool    hasDsaturWorked();
         void    brown();
         void    vertexOrderAscByDegree();
+        void    calculateU(Vertex *v, std::set<int> *u, int q);
+        int     smallestIndexJSuchThatVjColorIsEqualTo(int k);
 };
 
 #endif
