@@ -26,6 +26,8 @@ class Graph {
         bool    isColored();
         int     getColoredVertex();
         bool    hasDsaturWorked();
+        void    brown();
+        void    vertexOrderAscByDegree();
 };
 
 #endif
