@@ -82,6 +82,7 @@ void Graph::printGraph()
     for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it)
     {
         (*it)->printAdjVertexes();
+        std::cout << std::endl;
     }
 }
 
@@ -145,34 +146,33 @@ void Graph::vertexOrderAscByDegree()
     );
 }
 
-void Graph::calculateU(Vertex *v, std::set<int> *U, int q)
+std::set<int> Graph::calculateU(Vertex *v, int q)
 {
-    std::set<int> aux, result;
-    U->clear(); // should clear?
+    std::set<int> colorsUsedByNeightborhoods, U, result;
 
     for (int i = 1; i <= q+1; i++) // colors 1 to q+1
     {
-        U->insert(i);
+        U.insert(i);
     }
     
     for (auto it = v->adj.begin(); it != v->adj.end(); it++) // neighborhood colors
     {
-        aux.insert((*it)->getCurrentColor());
+        colorsUsedByNeightborhoods.insert((*it)->getCurrentColor());
     }
 
     // calculate the diff between the U and the neighborhood colors
     std::set_difference(
-        U->begin(),
-        U->end(),
-        aux.begin(),
-        aux.end(),
+        U.begin(),
+        U.end(),
+        colorsUsedByNeightborhoods.begin(),
+        colorsUsedByNeightborhoods.end(),
         std::inserter(
             result,
             result.end()
         )
     );
 
-    U = &result;
+    return result;
 }
 
 // there's some bug here
@@ -182,8 +182,6 @@ int Graph::smallestIndexJSuchThatVjColorIsEqualTo(int k)
 
     for(auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) {
         if((*it)->getCurrentColor() == k) {
-            std::cout << " J = " << j << std::endl;
-
             return j;
         }
 
@@ -199,6 +197,7 @@ void Graph::brown()
     this->vertexOrderAscByDegree();
 
     this->vertexes[0]->setCurrentColor((*this->colors.begin()));
+
     int i = 2;
     int k = n;
     int q = 1;
@@ -207,29 +206,8 @@ void Graph::brown()
     bool updateU = true;
     
     while (i > 1) {
-
-        std::cout << "Print vertexes and its colors" << std::endl;
-        for (auto i = vertexes.begin(); i != vertexes.end(); i++)
-        {
-            std::cout << "Vertex " << (*i)->getId() << " with color " << (*i)->getCurrentColor() << std::endl;
-        }
-
-        if (updateU) {
-
-            std::cout << "compute U before calculate" << std::endl;
-            for (auto i = U.begin(); i != U.end(); i++)
-            {
-                std::cout << *i << std::endl;
-            }
-            
-
-            this->calculateU(this->vertexes[i-1],&U, q); // O(n)
-
-            std::cout << "compute U before calculate" << std::endl;
-            for (auto i = U.begin(); i != U.end(); i++)
-            {
-                std::cout << *i << std::endl;
-            }     
+        if (updateU) {    
+            U = this->calculateU(this->vertexes[i-1], q);
         }
 
         if(U.empty()) {
@@ -242,7 +220,7 @@ void Graph::brown()
             this->vertexes[i-1]->setCurrentColor(j);
             this->colors.insert(j);
 
-            U.erase(j); // does this remove j from the set?
+            U.erase(j);
 
             if (j < k) {
                 if(j > q) {
@@ -251,7 +229,7 @@ void Graph::brown()
 
                 if(i == n) {
                     std::cout << "Storing solution: " << this->colors.size() << std::endl;
-                    this->setColoredVertex(this->colors.size()); // store the current solution?
+                    // this->setColoredVertex(this->colors.size()); // store the current solution?
                     k = q;
                     this->smallestIndexJSuchThatVjColorIsEqualTo(k); // very weird this function, not sure if its ok
                     i = j - 1;

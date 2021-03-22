@@ -29,7 +29,7 @@ class Graph {
         bool    hasDsaturWorked();
         void    brown();
         void    vertexOrderAscByDegree();
-        void    calculateU(Vertex *v, std::set<int> *u, int q);
+        std::set<int>    calculateU(Vertex *v, int q);
         int     smallestIndexJSuchThatVjColorIsEqualTo(int k);
 };
 
