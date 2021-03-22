@@ -175,13 +175,12 @@ std::set<int> Graph::calculateU(Vertex *v, int q)
     return result;
 }
 
-// there's some bug here
 int Graph::smallestIndexJSuchThatVjColorIsEqualTo(int k)
 {
-    int j = (int) this->vertexes.size();
+    int j = 0;
 
-    for(auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) {
-        if((*it)->getCurrentColor() == k) {
+    while(true) {
+        if(this->vertexes[j]->getCurrentColor() == k) {
             return j;
         }
 
@@ -206,6 +205,7 @@ void Graph::brown()
     bool updateU = true;
     
     while (i > 1) {
+
         if (updateU) {    
             U = this->calculateU(this->vertexes[i-1], q);
         }
@@ -228,10 +228,10 @@ void Graph::brown()
                 }
 
                 if(i == n) {
-                    std::cout << "Storing solution: " << this->colors.size() << std::endl;
                     // this->setColoredVertex(this->colors.size()); // store the current solution?
                     k = q;
-                    this->smallestIndexJSuchThatVjColorIsEqualTo(k); // very weird this function, not sure if its ok
+                    j = this->smallestIndexJSuchThatVjColorIsEqualTo(k); // very weird this function, not sure if its ok
+
                     i = j - 1;
                     q = k - 1;
                     updateU = false;
