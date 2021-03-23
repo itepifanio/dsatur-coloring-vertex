@@ -197,53 +197,69 @@ void Graph::brown()
 
     this->vertexes[0]->setCurrentColor((*this->colors.begin()));
 
-    int i = 2;
-    int k = n;
-    int q = 1;
-    std::set<int> U;
-    int li = 1;
-    bool updateU = true;
-    
-    while (i > 1) {
+    int k = 2;
+    int q = n;
+    int l = 1;
 
-        if (updateU) {    
-            U = this->calculateU(this->vertexes[i-1], q);
+    std::vector<std::set<int>> U;
+    std::vector<int> L;
+    bool updateU = true;
+
+    U.reserve(n);
+    L.reserve(n);
+    L[0] = 1;
+    
+    while (k > 1) {
+        std::cout << k << ", ";
+
+        if(updateU) {
+            U[k-1] = this->calculateU(this->vertexes[k-1], l);
         }
 
-        if(U.empty()) {
-            i = i - 1;
-            q = li;
-            updateU = false;
+        if(U[k-1].empty()) {
+            if(k == 1) {
+                break;
+            } else {
+                k = k - 1;
+                l = L[k-1];
+                updateU = false;
+            }
         } else {
-            int j = *U.begin();
+            int i = *U[k-1].begin();
                         
-            this->vertexes[i-1]->setCurrentColor(j);
-            this->colors.insert(j);
+            this->vertexes[k-1]->setCurrentColor(i);
+            this->colors.insert(i);
 
-            U.erase(j);
+            U[k-1].erase(i);
 
-            if (j < k) {
-                if(j > q) {
-                    q = q + 1;
-                }
-
-                if(i == n) {
-                    // this->setColoredVertex(this->colors.size()); // store the current solution?
-                    k = q;
-                    j = this->smallestIndexJSuchThatVjColorIsEqualTo(k); // very weird this function, not sure if its ok
-
-                    i = j - 1;
-                    q = k - 1;
-                    updateU = false;
+            if(i >= q) {
+                if(k == 1) {
+                    break;
                 } else {
-                    li = q;
-                    i = i + 1;
-                    updateU = true;
+                    k = k - 1;
+                    l = L[k-1];
                 }
             } else {
-                i = i - 1;
-                q = li;
-                updateU = false;
+                if(i > l) {
+                    l = l+1;
+                }
+
+                if(k == n) {
+                    std::cout << "Find solution" << std::endl;
+                    // store present solution
+                    q = l;
+                    int j = 1;
+                    while(! (this->vertexes[j-1]->getCurrentColor() == *this->colors.find(q-1))) {
+                        j = j + 1;
+                    }
+
+                    k = j - 1;
+                    l = q - 1;
+                } else {
+                    L[k-1] = l;
+                    k = k+1;
+                    updateU = true;
+                }
             }
         }
     }

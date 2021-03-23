@@ -44,6 +44,7 @@
 
 //     graphs->brown();
 //     graphs->printGraph();
+//     std::cout << graphs->hasDsaturWorked() << std::endl;
 
 //     return 0;
 // }
@@ -78,7 +79,7 @@ int main()
 
     int edges[8] = {83198, 148859, 247106, 386854, 580603, 714129, 869624, 1049256};
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 1; i++)
     {
         std::vector<Vertex *> v = r.readGraphFromFile(files[i], chromaticNumbers[i], vertexesNumbers[i]);
 
@@ -99,18 +100,18 @@ int main()
         g->brown();
         auto stop = std::chrono::high_resolution_clock::now();
 
-        if (g->hasDsaturWorked())
-        {
+        // if (g->hasDsaturWorked())
+        // {
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
             table << g->getTotalColors();
             table << duration.count() << fort::endr;
-        }
-        else
-        {
-            std::cout << "Coloring doesnt worked. Debug the graph:" << std::endl;
-            g->printGraph();
-        }
+        // }
+        // else
+        // {
+            // std::cout << "Coloring doesnt worked. Debug the graph:" << std::endl;
+            // g->printGraph();
+        // }
 
         std::cout << table.to_string() << std::endl;
     }
