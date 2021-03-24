@@ -193,34 +193,41 @@ int Graph::smallestIndexJSuchThatVjColorIsEqualTo(int k)
 void Graph::brown()
 {
     int n = this->vertexes.size();
-    this->vertexOrderAscByDegree();
+    this->vertexOrderAscByDegree(); // realmente ordena
 
+    // realmente atribui uma cor
     this->vertexes[0]->setCurrentColor((*this->colors.begin()));
-
+    
     int i = 2;
     int k = n;
     int q = 1;
-    std::set<int> U;
-    int li = 1;
+    std::vector<std::set<int>> U;
+    std::vector<int> L;
+    
+    U.reserve(n);
+    L.reserve(n);
+    
+    L[0] = 1;
+
     bool updateU = true;
     
     while (i > 1) {
-
-        if (updateU) {    
-            U = this->calculateU(this->vertexes[i-1], q);
+        std::cout << i << ", ";
+        if (updateU == true) {    
+            U[i-1] = this->calculateU(this->vertexes[i-1], q);
         }
 
-        if(U.empty()) {
+        if(U[i-1].empty()) {
             i = i - 1;
-            q = li;
+            q = L[i-1];
             updateU = false;
         } else {
-            int j = *U.begin();
-                        
+            int j = *U[i-1].begin();
+
             this->vertexes[i-1]->setCurrentColor(j);
             this->colors.insert(j);
 
-            U.erase(j);
+            U[i].erase(j);
 
             if (j < k) {
                 if(j > q) {
@@ -228,6 +235,7 @@ void Graph::brown()
                 }
 
                 if(i == n) {
+                    std::cout << "store " << this->colors.size() << std::endl;
                     // this->setColoredVertex(this->colors.size()); // store the current solution?
                     k = q;
                     j = this->smallestIndexJSuchThatVjColorIsEqualTo(k); // very weird this function, not sure if its ok
@@ -236,13 +244,13 @@ void Graph::brown()
                     q = k - 1;
                     updateU = false;
                 } else {
-                    li = q;
+                    L[i-1] = q;
                     i = i + 1;
                     updateU = true;
                 }
             } else {
                 i = i - 1;
-                q = li;
+                q = L[i-1];
                 updateU = false;
             }
         }

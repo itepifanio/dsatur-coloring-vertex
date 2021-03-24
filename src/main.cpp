@@ -78,7 +78,7 @@ int main()
 
     int edges[8] = {83198, 148859, 247106, 386854, 580603, 714129, 869624, 1049256};
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 1; i < 2; i++)
     {
         std::vector<Vertex *> v = r.readGraphFromFile(files[i], chromaticNumbers[i], vertexesNumbers[i]);
 
@@ -109,7 +109,7 @@ int main()
         else
         {
             std::cout << "Coloring doesnt worked. Debug the graph:" << std::endl;
-            g->printGraph();
+            // g->printGraph();
         }
 
         std::cout << table.to_string() << std::endl;
