@@ -193,9 +193,8 @@ int Graph::smallestIndexJSuchThatVjColorIsEqualTo(int k)
 void Graph::brown()
 {
     int n = this->vertexes.size();
-    this->vertexOrderAscByDegree(); // realmente ordena
+    this->vertexOrderAscByDegree();
 
-    // realmente atribui uma cor
     this->vertexes[0]->setCurrentColor((*this->colors.begin()));
     
     int i = 2;
@@ -210,10 +209,9 @@ void Graph::brown()
     L[0] = 1;
 
     bool updateU = true;
-    
+
     while (i > 1) {
-        std::cout << i << ", ";
-        if (updateU == true) {    
+        if (updateU) {    
             U[i-1] = this->calculateU(this->vertexes[i-1], q);
         }
 
@@ -227,7 +225,7 @@ void Graph::brown()
             this->vertexes[i-1]->setCurrentColor(j);
             this->colors.insert(j);
 
-            U[i].erase(j);
+            U[i-1].erase(j);
 
             if (j < k) {
                 if(j > q) {
@@ -235,7 +233,7 @@ void Graph::brown()
                 }
 
                 if(i == n) {
-                    std::cout << "store " << this->colors.size() << std::endl;
+                    std::cout << "store" << this->colors.size() << std::endl;
                     // this->setColoredVertex(this->colors.size()); // store the current solution?
                     k = q;
                     j = this->smallestIndexJSuchThatVjColorIsEqualTo(k); // very weird this function, not sure if its ok
