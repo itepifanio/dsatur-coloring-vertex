@@ -13,6 +13,7 @@ class Graph {
         int v;
         int e;
         int coloredVertexes = 0;
+        int qtdColors = 1;
     public:
         Graph(std::vector<Vertex*> &vertexes);
         ~Graph();
