@@ -101,8 +101,7 @@ void Graph::dsatur()
     maxVertexDegree->colorVertex(this->colors);
     maxVertexDegree->updateNeighborhoodsSaturationDegree();
 
-    while (!this->isColored())
-    {
+    while(! this->isColored()) {
         auto maxSaturationDegree = this->findMaximumSaturationDegree();
         maxSaturationDegree->colorVertex(this->colors);
         maxSaturationDegree->setColored(true);
@@ -110,6 +109,7 @@ void Graph::dsatur()
         maxSaturationDegree->updateNeighborhoodsSaturationDegree();
     }
 }
+
 
 bool Graph::hasDsaturWorked()
 {
@@ -127,7 +127,12 @@ bool Graph::hasDsaturWorked()
     return true;
 }
 
-int Graph::getTotalColors()
+int Graph::dsaturTotalColor() // dsatur
+{
+    return this->colors.size();
+}
+
+int Graph::getTotalColors() // brown
 {
     return this->qtdColors;
 }

@@ -53,15 +53,14 @@ void print(std::string nameFile, int vertex, int chromaticNumber, int edges, for
     
     Graph *g = new (std::nothrow) Graph(v);
     auto start = std::chrono::high_resolution_clock::now();
-    g->brown();
+    g->dsatur();
     auto stop = std::chrono::high_resolution_clock::now();
 
     if (g->hasDsaturWorked())
     {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-        table << g->getTotalColors();
+        table << g->dsaturTotalColor();
         table << duration.count() << fort::endr;
-        // g->printGraph();
     }
     else
     {

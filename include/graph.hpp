@@ -26,6 +26,7 @@ class Graph {
         void    incrementColoredVertexes();
         bool    isColored();
         int     getColoredVertex();
+        int     dsaturTotalColor();
         void    setColoredVertex(int c);
         bool    hasDsaturWorked();
         void    brown();
