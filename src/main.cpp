@@ -42,15 +42,8 @@ std::vector<Vertex *> test(int n, fort::char_table &table)
     return vertexes;
 }
 
-void print(std::string nameFile, int vertex, int chromaticNumber, int edges, fort::char_table &table)
+void print(std::vector<Vertex *> v, fort::char_table &table)
 {
-    Reader r;
-    std::vector<Vertex *> v = r.readGraphFromFile("./our_graphs/"+nameFile, chromaticNumber, vertex);
-
-    table << nameFile;
-    table << vertex;
-    table << edges;
-    
     Graph *g = new (std::nothrow) Graph(v);
     auto start = std::chrono::high_resolution_clock::now();
     g->brown();
@@ -65,6 +58,9 @@ void print(std::string nameFile, int vertex, int chromaticNumber, int edges, for
     }
     else
     {
+        auto d = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+        table << "error";
+        table << d.count() << fort::endr;
         std::cout << "Coloring doesnt worked. Debug the graph:" << std::endl;
     }
 }
@@ -89,17 +85,37 @@ int main(int argc, char** argv)
             << "Colors"
             << "Milisseconds" << fort::endr;
 
-    if(argc == 2) 
-    {
-        std::string nameFile(argv[1]);
-        int i = files[nameFile];
-        print(nameFile, vertexesNumbers[i], chromaticNumbers[i], edges[i], table);
-    } else {
-        Reader r;
-        for (std::map<std::string,int>::iterator it=files.begin(); it!=files.end(); ++it) {
-            print(it->first, vertexesNumbers[it->second], chromaticNumbers[it->second], edges[it->second], table);
-        }
+    for(int j = 10; j < 100; j+=10) {
+        table << j;
+        table << j;
+        print(test(j, table), table);
     }
+
+    // if(argc == 3) 
+    // {
+    //     std::string nameFile(argv[1]);
+    //     int i = files[nameFile];
+        
+    //     Reader r;
+    //     std::vector<Vertex *> v = r.readGraphFromFile("./our_graphs/"+nameFile, chromaticNumbers[i], vertexesNumbers[i]);
+        
+    //     table << nameFile;
+    //     table << vertexesNumbers[i];
+    //     table << edges[i];
+
+    //     print(v, nameFile, table);
+    // } else {
+    //     Reader r;
+    //     for (std::map<std::string,int>::iterator it=files.begin(); it!=files.end(); ++it) {
+    //         std::vector<Vertex *> v = r.readGraphFromFile("./our_graphs/"+it->first, chromaticNumbers[it->second], edges[it->second]);
+            
+    //         table << nameFile;
+    //         table << vertexesNumbers[it->second];
+    //         table << edges[it->second];
+
+    //         print(v, it->first, table);
+    //     }
+    // }
 
     std::cout << table.to_string() << std::endl;
 
