@@ -13,6 +13,7 @@ class Graph {
         int v;
         int e;
         int coloredVertexes = 0;
+        int qtdColors = 1;
     public:
         Graph(std::vector<Vertex*> &vertexes);
         ~Graph();
@@ -25,7 +26,12 @@ class Graph {
         void    incrementColoredVertexes();
         bool    isColored();
         int     getColoredVertex();
+        void    setColoredVertex(int c);
         bool    hasDsaturWorked();
+        void    brown();
+        void    vertexOrderAscByDegree();
+        std::set<int>    calculateU(Vertex *v, int q);
+        int     smallestIndexJSuchThatVjColorIsEqualTo(int k);
 };
 
 #endif
