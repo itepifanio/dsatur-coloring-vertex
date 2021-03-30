@@ -1,4 +1,4 @@
-Graph of professor
+p 7, 11, 3 colors
 e 1 7
 e 1 6
 e 1 3
