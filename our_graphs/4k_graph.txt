@@ -1,0 +1,19 @@
+p 7, 18. 4 Colors. I put one vertice in central of this graph https://www.google.com/url?sa=i&url=https%3A%2F%2Fjeremykun.com%2Ftag%2Fgames-on-graphs%2F&psig=AOvVaw1WdFQqM1dFscqE3_r5L4i4&ust=1617026641556000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMjG3OuT0-8CFQAAAAAdAAAAABAR
+e 1 2
+e 1 3
+e 1 4
+e 1 5
+e 1 6
+e 1 7
+e 2 3
+e 2 4
+e 2 6
+e 2 7
+e 3 4
+e 3 5
+e 3 7
+e 4 5
+e 4 6
+e 5 6
+e 5 7
+e 6 7

@@ -7,7 +7,9 @@ Graph::Graph(std::vector<Vertex *> &vertexes)
     this->vertexes = vertexes;
     this->colors.insert(1);
 }
-
+Graph::~Graph() {
+    
+}
 Vertex *Graph::findMaximumDegree()
 {
     auto aux = this->vertexes.begin();
@@ -127,7 +129,23 @@ bool Graph::hasDsaturWorked()
 
 int Graph::getTotalColors()
 {
-    return this->colors.size();
+    std::vector<int> cors(this->colors.size()+1, -1);
+    int qtdColors = 0;
+
+    for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) 
+    {
+        if(cors[(*it)->getCurrentColor()] == -1) {
+            qtdColors++;
+        }
+        cors[(*it)->getCurrentColor()] = 1;
+        for (auto adj = (*it)->adj.begin(); adj != (*it)->adj.end(); ++adj) {
+            if(cors[(*adj)->getCurrentColor()] == -1) {
+                qtdColors++;
+            }
+            cors[(*adj)->getCurrentColor()] = 1;
+        }
+    }
+    return qtdColors;
 }
 
 void Graph::setColoredVertex(int c)
@@ -233,7 +251,6 @@ void Graph::brown()
                 }
 
                 if(i == n) {
-                    std::cout << "store" << this->colors.size() << std::endl;
                     // this->setColoredVertex(this->colors.size()); // store the current solution?
                     k = q;
                     j = this->smallestIndexJSuchThatVjColorIsEqualTo(k); // very weird this function, not sure if its ok

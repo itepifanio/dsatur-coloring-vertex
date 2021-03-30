@@ -151,7 +151,7 @@ void Vertex::printAdjVertexes()
     std::cout << "{";
     for (auto it = this->adj.begin(); it != this->adj.end(); ++it)
     {
-        std::cout << "Current color " << (*it)->getCurrentColor() << std::endl;
+        std::cout << "Current color " << (*it)->getCurrentColor() << " ";
         std::cout << (*it)->getId() << ", ";
     }
     std::cout << "}, //";
