@@ -8,40 +8,6 @@
 #include <chrono>
 #include <map>
 
-std::vector<Vertex *> test(int n, fort::char_table &table)
-{
-    std::vector<Vertex *> vertexes;
-    int edges = 0;
-
-    for (int i = 0; i < n; ++i)
-    {
-        Vertex *v = new Vertex(i + 1);
-
-        vertexes.push_back(v);
-    }
-
-    std::srand( ( unsigned int )std::time( nullptr ) );
-
-    for (int j = 0; j < std::rand() % 10000; ++j)
-    {
-        for (int i = 0; i < n; ++i)
-        {
-            int adjacent = i;
-            while (adjacent == i)
-            {
-                adjacent = std::rand() % (n - 1);
-            }
-
-            edges++;
-            vertexes[i]->addAdjacentVertex(vertexes[adjacent]);
-        }
-    }
-
-    table << edges;
-
-    return vertexes;
-}
-
 void print(std::string nameFile, int vertex, int chromaticNumber, int edges, fort::char_table &table)
 {
     Reader r;
