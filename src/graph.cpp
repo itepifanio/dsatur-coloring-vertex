@@ -116,7 +116,7 @@ void Graph::dsatur()
     }
 }
 
-bool Graph::hasDsaturWorked()
+bool Graph::hasAlgorithmWorked()
 {
     for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it)
     {

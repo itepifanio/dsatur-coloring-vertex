@@ -23,16 +23,16 @@ class Graph {
         int     getTotalColors();
         int     dsaturTotalColor(); // workaround
         void    printGraph();
-        void    dsatur();
         void    incrementColoredVertexes();
         bool    isColored();
         int     getColoredVertex();
         void    setColoredVertex(int c);
-        bool    hasDsaturWorked();
-        void    brown();
+        bool    hasAlgorithmWorked();
         void    vertexOrderAscByDegree();
         std::set<int>    calculateU(Vertex *v, int q);
         int     smallestIndexJSuchThatVjColorIsEqualTo(int k);
+        void    brown();
+        void    dsatur();
 };
 
 #endif

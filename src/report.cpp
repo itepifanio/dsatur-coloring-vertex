@@ -47,7 +47,7 @@ void Report::brown()
         g->brown();
         auto stop = std::chrono::high_resolution_clock::now();
 
-        if (g->hasDsaturWorked())
+        if (g->hasAlgorithmWorked())
         {
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
             table << g->getTotalColors();
@@ -91,7 +91,8 @@ void Report::dsatur()
         table << fort::header
               << "Vertexes"
               << "Edges"
-              << "Colors"
+              << "Colored with"
+              << "Chromatic number"
               << "Milisseconds" << fort::endr;
 
         table << vertexesNumbers[i];
@@ -104,11 +105,12 @@ void Report::dsatur()
         g->dsatur();
         auto stop = std::chrono::high_resolution_clock::now();
 
-        if (g->hasDsaturWorked())
+        if (g->hasAlgorithmWorked())
         {
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
             table << g->dsaturTotalColor();
+            table << chromaticNumbers[i];
             table << duration.count() << fort::endr;
         }
         else
@@ -118,4 +120,9 @@ void Report::dsatur()
 
         std::cout << table.to_string() << std::endl;
     }
+}
+
+void Report::tabucol()
+{
+    std::cout << "TODO" << std::endl;
 }
