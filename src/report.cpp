@@ -108,7 +108,7 @@ void Report::dsatur()
         {
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 
-            table << g->getTotalColors();
+            table << g->dsaturTotalColor();
             table << duration.count() << fort::endr;
         }
         else

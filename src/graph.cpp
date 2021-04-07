@@ -88,6 +88,11 @@ void Graph::printGraph()
     }
 }
 
+int Graph::dsaturTotalColor() // dsatur
+{
+    return this->colors.size();
+}
+
 void Graph::dsatur()
 {
     if (this->vertexes.size() == 0)

@@ -21,6 +21,7 @@ class Graph {
         Vertex* findMaximumSaturationDegree();
         bool    isFullColored();
         int     getTotalColors();
+        int     dsaturTotalColor(); // workaround
         void    printGraph();
         void    dsatur();
         void    incrementColoredVertexes();
