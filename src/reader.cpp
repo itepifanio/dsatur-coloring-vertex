@@ -1,4 +1,4 @@
-#include "../include/reader.hpp"
+#include "../include/reader.h"
 
 #include <string>
 #include <iostream>
@@ -46,10 +46,6 @@ std::vector<Vertex*> Reader::readGraphFromFile(std::string filename, int chromat
         
         std::string vertex1 = aux.substr(0, end_pos);
         std::string vertex2 = aux.substr(end_pos+1);
-
-        // std::cout << std::stoi(vertex1) << std::endl; 
-        // std::cout << std::stoi(vertex2) << std::endl;
-        // std::cout << vertexes[std::stoi(vertex1)]->getId() << std::endl;   
         
         vertexes[std::stoi(vertex1)]->addAdjacentVertex(vertexes[std::stoi(vertex2)]);
 	}

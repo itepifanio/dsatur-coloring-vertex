@@ -1,4 +1,4 @@
-#include "../include/graph.hpp"
+#include "../include/graph.h"
 
 #include <iostream>
 

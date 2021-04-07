@@ -2,7 +2,7 @@
 #ifndef READER_H
 #define READER_H
 
-#include "../include/vertex.hpp"
+#include "../include/vertex.h"
 #include <vector>
 #include <string>
 

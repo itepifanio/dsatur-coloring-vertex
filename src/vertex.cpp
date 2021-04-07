@@ -1,4 +1,4 @@
-#include "../include/vertex.hpp"
+#include "../include/vertex.h"
 
 #include <iostream>
 

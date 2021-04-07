@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "vertex.hpp"
+#include "vertex.h"
 #include <set>
 
 class Graph {
