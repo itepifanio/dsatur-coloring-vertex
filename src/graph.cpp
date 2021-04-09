@@ -261,3 +261,46 @@ void Graph::brown()
     }
     this->qtdColors = k;
 }
+
+int Graph::tabucolf()
+{
+    int sum = 0;
+
+    for(auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) {
+        for(unsigned j = 0; j < (*it)->adj.size(); j++) {
+            if(this->colors[i->first] == graph_colors[i->second[j]]) {
+                sum += 1;
+            }
+        }
+    }
+
+    return sum;
+}
+
+void Graph::tabucol()
+{
+    // graph, number_of_colors, tabu_size=7, reps=100, max_iterations=10000, debug=False
+    int k = this->vertexes.size(); // number of colors
+
+    int T = 7; // tabu size
+
+    int reps = 100; // fixed 
+
+    int nbmax = 10000; // maximum number of interactions
+
+    // generate a random solution with dsatur
+    this->dsatur();
+
+    this->colors.clear();
+
+    for(int i = 1; i <= k; i++){
+        this->colors.insert(i);
+    }
+
+    int nbtir = 0;
+
+
+    while(this->tabucolf() > 0 && nbtir < nbmax) {
+
+    }
+}

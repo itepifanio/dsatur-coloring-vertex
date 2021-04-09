@@ -33,6 +33,8 @@ class Graph {
         int     smallestIndexJSuchThatVjColorIsEqualTo(int k);
         void    brown();
         void    dsatur();
+        void    tabucol();
+        int     tabucolf(); // aux function to tabucol algorithm 
 };
 
 #endif
