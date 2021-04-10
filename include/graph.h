@@ -34,7 +34,8 @@ class Graph {
         void    brown();
         void    dsatur();
         void    tabucol();
-        int     tabucolf(); // aux function to tabucol algorithm 
+        int     tabucolf(std::vector<Vertex *> &vertexes, std::vector<int> &colors); // aux function to tabucol algorithm 
+        void    initializeTabu(std::vector<Vertex*> &vertexes, int* colors, int k);
 };
 
 #endif

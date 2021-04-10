@@ -262,13 +262,13 @@ void Graph::brown()
     this->qtdColors = k;
 }
 
-int Graph::tabucolf()
+int Graph::tabucolf(std::vector<Vertex *> &vertexes, std::vector<int> &colors)
 {
     int sum = 0;
 
-    for(auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) {
+    for(auto it = vertexes.begin(); it != vertexes.end(); ++it) {
         for(unsigned j = 0; j < (*it)->adj.size(); j++) {
-            if(this->colors[i->first] == graph_colors[i->second[j]]) {
+            if((*it)->getId() == (*it)->adj[j]->getId()) { // edge check
                 sum += 1;
             }
         }
@@ -277,30 +277,87 @@ int Graph::tabucolf()
     return sum;
 }
 
+// greedy algorithm that creates the first coloring to tabucol
+void Graph::initializeTabu(std::vector<Vertex*> &vertexes, int* colors, int k)
+{
+// A simple greedy algorithm that leaves the assigned color  if possible, gives another legal color or 
+	// assigns a random color if nothing else is available.
+	// First produce a random permutation for the vertex order
+	int* perm = new int[(int) vertexes.size()];
+	
+    for (int i = 0; i < vertexes.size(); i++) {
+		perm[i] = i;
+	}
+
+	for (int i = 0; i < (int) vertexes.size(); i++) {
+		int p = rand() % (int) vertexes.size();
+		int h = perm[i];
+		perm[i] = perm[p];
+		perm[p] = h;
+	}
+
+	int* taken = new int[k + 1];
+
+	// Insure all colors are in the range [1, ... ,k]
+	for (int i = 0; i < (int) vertexes.size(); i++) {
+		if (colors[i]<1 || colors[i]>k) {
+            colors[i] = 1;
+        }
+	}
+
+	// Go through all nodes
+	for (int ii = 0; ii < (int) vertexes.size(); ii++) {
+		int i = perm[ii];
+		// Build a list of used colors in the nodes neighborhood
+		for (int j = 1; j <= k; j++) {
+			taken[j] = 0;
+		}
+
+		for (int j = 0; j < g.n; j++) {
+			// numConfChecks++;
+			if (i != j && g[i][j]) {
+				taken[colors[j]]++;
+			}
+		}
+		
+        // if the currently assigned color is legal, leave it otherwise find a new legal color, and if not possible
+		// set it to a random color.
+		if (taken[colors[i]] > 0) {
+			int color = (rand() % k) + 1;
+			for (int j = 1; j <= k; j++) {
+				if (taken[j] == 0) {
+					color = j;
+					break;
+				}
+			}
+
+			colors[i] = color;
+		}
+	}
+
+	delete[] perm;
+	delete[] taken;
+}
+
 void Graph::tabucol()
 {
-    // graph, number_of_colors, tabu_size=7, reps=100, max_iterations=10000, debug=False
     int k = this->vertexes.size(); // number of colors
 
-    int T = 7; // tabu size
+    int condition = 7;
 
     int reps = 100; // fixed 
 
     int nbmax = 10000; // maximum number of interactions
 
-    // generate a random solution with dsatur
-    this->dsatur();
+    int *colors;
 
-    this->colors.clear();
+    this->initializeTabu(this->vertexes, colors, k);
 
-    for(int i = 1; i <= k; i++){
-        this->colors.insert(i);
-    }
 
     int nbtir = 0;
 
 
-    while(this->tabucolf() > 0 && nbtir < nbmax) {
+    // while(this->tabucolf(tabuVertexes, colors) > 0 && nbtir < nbmax) {
 
-    }
+    // }
 }
