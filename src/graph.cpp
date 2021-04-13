@@ -7,8 +7,8 @@ Graph::Graph(std::vector<Vertex *> &vertexes)
     this->vertexes = vertexes;
     this->colors.insert(1);
 }
-Graph::~Graph() {
-    
+Graph::~Graph()
+{
 }
 Vertex *Graph::findMaximumDegree()
 {
@@ -145,23 +145,22 @@ void Graph::setColoredVertex(int c)
 void Graph::vertexOrderAscByDegree()
 {
     std::sort(
-        this->vertexes.begin(), 
-        this->vertexes.end(), 
+        this->vertexes.begin(),
+        this->vertexes.end(),
         [](const Vertex *v1, const Vertex *v2) { // anonymous function c++
             return (v1->adj.size() > v2->adj.size());
-        }
-    );
+        });
 }
 
 std::set<int> Graph::calculateU(Vertex *v, int q)
 {
     std::set<int> colorsUsedByNeightborhoods, U, result;
 
-    for (int i = 1; i <= q+1; i++) // colors 1 to q+1
+    for (int i = 1; i <= q + 1; i++) // colors 1 to q+1
     {
         U.insert(i);
     }
-    
+
     for (auto it = v->adj.begin(); it != v->adj.end(); it++) // neighborhood colors
     {
         colorsUsedByNeightborhoods.insert((*it)->getCurrentColor());
@@ -175,9 +174,7 @@ std::set<int> Graph::calculateU(Vertex *v, int q)
         colorsUsedByNeightborhoods.end(),
         std::inserter(
             result,
-            result.end()
-        )
-    );
+            result.end()));
 
     return result;
 }
@@ -186,8 +183,10 @@ int Graph::smallestIndexJSuchThatVjColorIsEqualTo(int k)
 {
     int j = 0;
 
-    while(true) {
-        if(this->vertexes[j]->getCurrentColor() == k) {
+    while (true)
+    {
+        if (this->vertexes[j]->getCurrentColor() == k)
+        {
             return j;
         }
 
@@ -203,43 +202,51 @@ void Graph::brown()
     this->vertexOrderAscByDegree();
 
     this->vertexes[0]->setCurrentColor((*this->colors.begin()));
-    
+
     int i = 2;
     int k = n;
     int q = 1;
     std::vector<std::set<int>> U;
     std::vector<int> L;
-    
+
     U.reserve(n);
     L.reserve(n);
-    
+
     L[0] = 1;
 
     bool updateU = true;
 
-    while (i > 1) {
-        if (updateU) {    
-            U[i-1] = this->calculateU(this->vertexes[i-1], q);
+    while (i > 1)
+    {
+        if (updateU)
+        {
+            U[i - 1] = this->calculateU(this->vertexes[i - 1], q);
         }
 
-        if(U[i-1].empty()) {
+        if (U[i - 1].empty())
+        {
             i = i - 1;
-            q = L[i-1];
+            q = L[i - 1];
             updateU = false;
-        } else {
-            int j = *U[i-1].begin();
+        }
+        else
+        {
+            int j = *U[i - 1].begin();
 
-            this->vertexes[i-1]->setCurrentColor(j);
+            this->vertexes[i - 1]->setCurrentColor(j);
             this->colors.insert(j);
 
-            U[i-1].erase(j);
+            U[i - 1].erase(j);
 
-            if (j < k) {
-                if(j > q) {
+            if (j < k)
+            {
+                if (j > q)
+                {
                     q = q + 1;
                 }
 
-                if(i == n) {
+                if (i == n)
+                {
                     // this->setColoredVertex(this->colors.size()); // store the current solution?
                     k = q;
                     j = this->smallestIndexJSuchThatVjColorIsEqualTo(k); // very weird this function, not sure if its ok
@@ -247,14 +254,18 @@ void Graph::brown()
                     i = j - 1;
                     q = k - 1;
                     updateU = false;
-                } else {
-                    L[i-1] = q;
+                }
+                else
+                {
+                    L[i - 1] = q;
                     i = i + 1;
                     updateU = true;
                 }
-            } else {
+            }
+            else
+            {
                 i = i - 1;
-                q = L[i-1];
+                q = L[i - 1];
                 updateU = false;
             }
         }
@@ -266,9 +277,12 @@ int Graph::tabucolf(std::vector<Vertex *> &vertexes, std::vector<int> &colors)
 {
     int sum = 0;
 
-    for(auto it = vertexes.begin(); it != vertexes.end(); ++it) {
-        for(unsigned j = 0; j < (*it)->adj.size(); j++) {
-            if((*it)->getId() == (*it)->adj[j]->getId()) { // edge check
+    for (auto it = vertexes.begin(); it != vertexes.end(); ++it)
+    {
+        for (unsigned j = 0; j < (*it)->adj.size(); j++)
+        {
+            if ((*it)->getId() == (*it)->adj[j]->getId())
+            { // edge check
                 sum += 1;
             }
         }
@@ -278,86 +292,150 @@ int Graph::tabucolf(std::vector<Vertex *> &vertexes, std::vector<int> &colors)
 }
 
 // greedy algorithm that creates the first coloring to tabucol
-void Graph::initializeTabu(std::vector<Vertex*> &vertexes, int* colors, int k)
+void Graph::initializeTabu(std::vector<Vertex *> &vertexes, int *colors, int k)
 {
-// A simple greedy algorithm that leaves the assigned color  if possible, gives another legal color or 
-	// assigns a random color if nothing else is available.
-	// First produce a random permutation for the vertex order
-	int* perm = new int[(int) vertexes.size()];
-	
-    for (int i = 0; i < vertexes.size(); i++) {
-		perm[i] = i;
-	}
+    // A simple greedy algorithm that leaves the assigned color  if possible, gives another legal color or
+    // assigns a random color if nothing else is available.
+    // First produce a random permutation for the vertex order
+    int *perm = new int[(int)vertexes.size()];
 
-	for (int i = 0; i < (int) vertexes.size(); i++) {
-		int p = rand() % (int) vertexes.size();
-		int h = perm[i];
-		perm[i] = perm[p];
-		perm[p] = h;
-	}
+    for (int i = 0; i < vertexes.size(); i++)
+    {
+        perm[i] = i;
+    }
 
-	int* taken = new int[k + 1];
+    for (int i = 0; i < (int)vertexes.size(); i++)
+    {
+        int p = rand() % (int)vertexes.size();
+        int h = perm[i];
+        perm[i] = perm[p];
+        perm[p] = h;
+    }
 
-	// Insure all colors are in the range [1, ... ,k]
-	for (int i = 0; i < (int) vertexes.size(); i++) {
-		if (colors[i]<1 || colors[i]>k) {
+    int *taken = new int[k + 1];
+
+    // Insure all colors are in the range [1, ... ,k]
+    for (int i = 0; i < (int)vertexes.size(); i++)
+    {
+        if (colors[i] < 1 || colors[i] > k)
+        {
             colors[i] = 1;
         }
-	}
+    }
 
-	// Go through all nodes
-	for (int ii = 0; ii < (int) vertexes.size(); ii++) {
-		int i = perm[ii];
-		// Build a list of used colors in the nodes neighborhood
-		for (int j = 1; j <= k; j++) {
-			taken[j] = 0;
-		}
+    // Go through all nodes
+    for (int ii = 0; ii < (int)vertexes.size(); ii++)
+    {
+        int i = perm[ii];
+        // Build a list of used colors in the nodes neighborhood
+        for (int j = 1; j <= k; j++)
+        {
+            taken[j] = 0;
+        }
 
-		for (int j = 0; j < g.n; j++) {
-			// numConfChecks++;
-			if (i != j && g[i][j]) {
-				taken[colors[j]]++;
-			}
-		}
-		
+        for (int j = 0; j < g.n; j++)
+        {
+            // numConfChecks++;
+            if (i != j && g[i][j])
+            {
+                taken[colors[j]]++;
+            }
+        }
+
         // if the currently assigned color is legal, leave it otherwise find a new legal color, and if not possible
-		// set it to a random color.
-		if (taken[colors[i]] > 0) {
-			int color = (rand() % k) + 1;
-			for (int j = 1; j <= k; j++) {
-				if (taken[j] == 0) {
-					color = j;
-					break;
-				}
-			}
+        // set it to a random color.
+        if (taken[colors[i]] > 0)
+        {
+            int color = (rand() % k) + 1;
+            for (int j = 1; j <= k; j++)
+            {
+                if (taken[j] == 0)
+                {
+                    color = j;
+                    break;
+                }
+            }
 
-			colors[i] = color;
+            colors[i] = color;
+        }
+    }
+
+    delete[] perm;
+    delete[] taken;
+}
+
+void Graph::initializeAux(
+    std::vector<std::vector<int>> &nodesByColor,
+    std::vector<std::vector<int>> &conflicts,
+    std::vector<std::vector<int>> &tabuStatus,
+    std::vector<int> &nbcPosition,
+    std::vector<Vertex *> &vertexes,
+    int *colors,
+    int k)
+{
+    int n = (int) vertexes.size();
+	// Allocate and initialize (k+1)x(n+1) array for nodesByColor and conflicts
+	nodesByColor.reserve(k + 1);
+	conflicts.reserve(k + 1);
+
+	for (int i = 0; i <= k; i++) {
+		nodesByColor[i].reserve(n + 1);
+		nodesByColor[i][0] = 0;
+		conflicts[i].reserve(n + 1);
+		for (int j = 0; j <= n; j++) {
+			conflicts[i][j] = 0;
 		}
 	}
 
-	delete[] perm;
-	delete[] taken;
+	// Allocate the tabuStatus array
+	tabuStatus.reserve(n);
+	for (int i = 0; i < n; i++) {
+		tabuStatus[i].reserve(k + 1);
+		for (int j = 0; j <= k; j++) {
+			tabuStatus[i][j] = 0;
+		}
+	}
+
+	// Allocate the nbcPositions array
+	nbcPosition.reserve(n);
+
+	// Initialize the nodesByColor and nbcPosition array
+	for (int i = 0; i < n; i++) {
+		nodesByColor[colors[i]][(nbcPosition[i] = ++nodesByColor[colors[i]][0])] = i;
+	}
+
+	// Initialize the conflicts and neighbors array
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+            // não tenho certeza quanto ao .getCurrentColor aqui
+            // antes era uma matriz de adjacencias com valores inicializados com 0
+            // ele passa inicializado pra função original, ver isso
+			if (vertexes[i][j].getCurrentColor() && i != j) {
+				conflicts[colors[j]][i]++;
+			}
+		}
+	}
 }
 
 void Graph::tabucol()
 {
-    int k = this->vertexes.size(); // number of colors
+    std::vector<std::vector<int>> nodesByColor; // Arrays of nodes for each color
+    std::vector<int> nbcPosition;               // Position of each node in the above array
+    std::vector<std::vector<int>> conflicts;    // Number of conflicts for each color and node
+    std::vector<std::vector<int>> tabuStatus;   // Tabu status for each node and color
 
-    int condition = 7;
+    std::vector<int> nodesInConflict;
+    nodesInConflict.reserve(((int)this->vertexes.size()) + 1);
 
-    int reps = 100; // fixed 
+    std::vector<int> confPosition;
+    nodesInConflict.reserve(((int)this->vertexes.size()) + 1);
 
-    int nbmax = 10000; // maximum number of interactions
+    int k = this->vertexes.size(); // number of colors(?)
 
     int *colors;
 
     this->initializeTabu(this->vertexes, colors, k);
 
+    this->initializeAux(nodesByColor, conflicts, tabuStatus, nbcPosition, this->vertexes, colors, k);
 
-    int nbtir = 0;
-
-
-    // while(this->tabucolf(tabuVertexes, colors) > 0 && nbtir < nbmax) {
-
-    // }
 }
