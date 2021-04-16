@@ -33,6 +33,7 @@ class Graph {
         int     smallestIndexJSuchThatVjColorIsEqualTo(int k);
         void    brown();
         void    dsatur();
+        void    tabucol(std::vector<std::vector<int>> graph, int numberColors, int tabuSize=7, int reps=100, int maxIterations=10000);
 };
 
 #endif
