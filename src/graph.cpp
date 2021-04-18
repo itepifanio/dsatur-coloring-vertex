@@ -300,17 +300,17 @@ void Graph::tabucol(std::vector<std::vector<int>> graph, int numberColors, int t
     while (iterations < maxIterations)
     {
         std::set<int> moveCandidates;
-        
-        int vertex = -1;
+
+        // int vertex = -1;
         int localConflicts = 0;
 
         for (int i = 0; i < (int)graph.size(); i++)
         {
             for (int j = (i + 1); j < (int)graph.size(); j++)
             {
-                if (graph[i][j] > 0)
+                if (graph[i][j] > 0) // is adjacent?
                 {
-                    if (solution[i] == solution[j])
+                    if (solution[i] == solution[j]) // and have same color
                     {
                         moveCandidates.insert(i);
                         moveCandidates.insert(j);
@@ -320,6 +320,13 @@ void Graph::tabucol(std::vector<std::vector<int>> graph, int numberColors, int t
             }
         }
 
+        std::vector<int> vertexes;
+
+        vertexes.reserve(moveCandidates.size());
+
+        // copy moveCandidates set values to a vertexes list
+        std::copy(moveCandidates.begin(), moveCandidates.end(), std::back_inserter(vertexes));
+
         if (localConflicts == 0)
         {
             break; // best colour found
@@ -328,19 +335,16 @@ void Graph::tabucol(std::vector<std::vector<int>> graph, int numberColors, int t
         // generate neighbourhoods solutions
         std::map<int, int> newSolution;
 
+        int vertex = -1;
+
         for (int r = 0; r < reps; r++)
         {
-            std::vector<int> vertexes;
-
-            vertexes.reserve(moveCandidates.size());
-
-            std::copy(moveCandidates.begin(), moveCandidates.end(), std::back_inserter(vertexes));
 
             // choose a node to move
             vertex = vertexes[rand() % (int)vertexes.size()];
 
             int newColor = colors[rand() % ((int)colors.size() - 1)];
-
+            // std::cout << newColor << std::endl;
             if (solution[vertex] == newColor)
             {
                 newColor = (int)*colors.end(); // swap last color with the current
@@ -349,7 +353,6 @@ void Graph::tabucol(std::vector<std::vector<int>> graph, int numberColors, int t
             // creating neighborhood solution
             std::map<int, int> aux(solution); // aux to copy the solution to a new map
             newSolution = aux;
-
             newSolution[vertex] = newColor;
 
             // counting conflicts
@@ -366,8 +369,8 @@ void Graph::tabucol(std::vector<std::vector<int>> graph, int numberColors, int t
                 }
             }
 
-            if (newConflicts < localConflicts)
-            {                                                          // found a better solution
+            if (newConflicts < localConflicts) // found a better solution
+            {
                 if (newConflicts <= aspirationalLevel[localConflicts]) // TODO::check this
                 {
                     aspirationalLevel[localConflicts] = newConflicts - 1;
@@ -382,7 +385,6 @@ void Graph::tabucol(std::vector<std::vector<int>> graph, int numberColors, int t
                 }
                 else
                 {
-
                     auto it = std::find(tabuList.begin(), tabuList.end(), std::make_pair(vertex, newColor));
 
                     if (it != tabuList.end()) // tabu move isnt good enought

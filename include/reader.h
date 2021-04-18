@@ -14,6 +14,7 @@ class Reader {
     public:
         Reader();
         std::vector<Vertex*> readGraphFromFile(std::string filename, int chromaticNumber, int vertexes);
+        std::vector<std::vector<int>> readGraphFromFileToAdjMatrix(std::string filename, int vertexes);
         int getChromaticNumber();
         int getVertexesNumber();
 };

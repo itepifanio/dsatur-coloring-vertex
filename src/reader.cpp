@@ -10,6 +10,53 @@ Reader::Reader()
     this->chromaticNumber = 0;
 }
 
+std::vector<std::vector<int>> Reader::readGraphFromFileToAdjMatrix(std::string filename, int vertexesNumber)
+{
+    std::vector<int> aux(vertexesNumber);
+
+    std::vector<std::vector<int>> vertexes(vertexesNumber, aux);
+
+    std::ifstream file(filename);    
+
+	std::string line = "";
+
+    std::vector<std::string> word;
+
+    std::getline(file, line); // ignore head of the file
+
+    line = "";
+
+	while (std::getline(file, line))
+	{
+        std::size_t ini_pos = line.find(" ");
+        std::string name = line.substr(0, ini_pos+1);
+
+        ini_pos = line.find(" ");
+        std::string aux = line.substr(ini_pos+1);
+        std::size_t end_pos = aux.find(" ");
+        
+        std::string vertex1 = aux.substr(0, end_pos);
+        std::string vertex2 = aux.substr(end_pos+1);
+        
+        vertexes[std::stoi(vertex1)][std::stoi(vertex2)] = 1;
+	}
+
+    // for (int it = 0; it < vertexesNumber; it++)
+    // {
+    //     std::cout << "[";
+    //     for (int jt = 0; jt < vertexesNumber; jt++)
+    //     {
+    //         std::cout << vertexes[it][jt] << ", ";
+    //     }
+    //     std::cout << "]" << std::endl;
+    // }
+    
+
+	file.close();
+
+	return vertexes;
+}
+
 std::vector<Vertex*> Reader::readGraphFromFile(std::string filename, int chromaticNumber, int vertexesNumber) 
 {
     this->chromaticNumber = chromaticNumber;
